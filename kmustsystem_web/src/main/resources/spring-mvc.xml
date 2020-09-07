@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+           ">
+
+<!--    springMVC 主配置文件 ，建立与网页的连接-->
+
+    <!--    配置spring容器中需要扫描的类 -->
+    <!--   功能： 寻找到java目录文件下的包 ，值为web ：控制层的包名-->
+    <context:component-scan base-package="xzy.web"/>
+
+    <!--   配置一个视图解析器-->
+    <!--   功能：找到对应控制器中的函数 -->
+    <bean id="viewResolver"  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--        注入 -->
+        <property name="prefix" value="/pages/"> </property>
+        <property name="suffix" value=".jsp"> </property>
+        <!--     与helloController中的success拼接-> success.jsp , 而该文件的的路径即为prefix 标签中指定的路径 -->
+
+    </bean>
+
+<!--    如果涉及到静态资源（本地资源）的交互，为了资源不被拦截，需要如下配置-->
+    <mvc:resources location="/css/" mapping="/css/**"></mvc:resources>
+    <mvc:resources location="/img/" mapping="/img/**"></mvc:resources>
+    <mvc:resources location="/plugins/" mapping="/plugins/**"></mvc:resources>
+
+
+
+    <!--    配置springMVC的标签注解方式 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+
+
+</beans>

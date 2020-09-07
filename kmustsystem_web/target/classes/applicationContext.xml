@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+<!--   spring 主配置文件 ， 链接mybatis,建立与数据库的连接-->
+
+
+<!--在此处配置上mybatis的相关内容，这样就可以让spring框架和mybatis进行整合-->
+<!-- 注： mybatis00001中 对应的配置文件在SqlMapConfig.xml中， 构建与数据库的链接 和 mapper映射器-->
+<!--第一步：把业务层和持久层的代码进行扫描，因为持久层的接口会关联mapper映射器-->
+    <context:component-scan base-package="xzy.service"></context:component-scan>
+    <context:component-scan base-package="xzy.dao"></context:component-scan>
+
+
+<!--第二步：去配置数据库连接信息,相当于mybatis000001中的SqlMapConfig.xml中的数据库配置-->
+<!--    注入，相当于new一个新对象ComboPooledDataSource，id相当于实例名-->
+    <!--    对象：ComboPooledDataSource  ，实例名：dataSource-->
+<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+<!--    数据库驱动-->
+    <property name="driverClass" value="com.mysql.jdbc.Driver"> </property>
+<!--    数据库连接路径-->
+    <property name="jdbcUrl" value="jdbc:mysql:///my"> </property>
+<!--   用户名-->
+    <property name="user" value="root"> </property>
+<!--    用户密码-->
+    <property name="password" value="root"> </property>
+</bean>
+
+
+<!--    需要把上述连接信息交给一个工厂模式对象去管理，这样就可以实现对数据库的连接-->
+<!--    对象：SqlSessionFactoryBean  ，实例名：sqlSessionFactory-->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<!--    指向上面的dataSource实例-->
+    <property name="dataSource" ref="dataSource"> </property>
+</bean>
+
+
+<!--映射器去指定接口 ,相当于mapper-->
+    <!--    对象：MapperScannerConfigurer  ，实例名：mapperScanner-->
+    <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="xzy.dao"> </property>
+    </bean>
+
+
+</beans>
